@@ -30,7 +30,10 @@ class Service(Protocol):
         if data["type"] == "call":
             log.debug(1)
             func = self.factory.services[data["service"]]
-            resp = func(**data["data"])
+            try:
+                resp = func(**data["data"])
+            except TypeError:
+                self.send({"res": "error","error": "wrong format"})
             self.send({"type": "respond", "data": resp, "jobid": data["jobid"]})
 
 

@@ -1,34 +1,28 @@
 #!/usr/bin/env python
 
-import uuid
-
-import peewee
+from peewee import *
 
 import base
 
 
-db = peewee。SqliteDatabase("users.db") # just for test
+db = SqliteDatabase("db.db") # just for test
 
-class BaseModel(peewee.Model):
+class BaseModel(Model):
     class Meta:
         database = db
 
 class User(BaseModel):
-    id=peewee.UUIDField
+    id = BigAutoField(primary_key=True)
     name = CharField(max_length=16, unique=True)
     password = CharField(max_length=16)
 
 class Main:
     def login(self, username, password):
-        try:
-            User.get(User.name == username, User.password == password)
-            return True
-        except:
-            return False
+        return User.get_or_none(User.name == username, User.password == password) is not None
     
     def register(self, username, password):
         try:
-            User.create(id=uuid.uuid4(),username=username, password=password)
+            User.create(name=username, password=password)
             return True
         except:
             return False
