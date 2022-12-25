@@ -27,6 +27,12 @@ class Main:
         except:
             return False
 
+    def user_get_name(self, id):
+        user = User.get_or_none(id=id)
+        if user is None:
+            return None
+        return user.name
+
 if __name__ == "__main__":
     db.create_tables([User])
     server = base.RpcServiceFactory()
